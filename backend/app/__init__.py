@@ -17,6 +17,11 @@ def create_app():
     bcrypt.init_app(app)
 
     from app.routes.main import  main_blueprint
+    from app.routes.authentication import authorization_blueprint
+    from app.routes.file_management import file_management_blueprint
+
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(authorization_blueprint)
+    app.register_blueprint(file_management_blueprint)
 
     return app

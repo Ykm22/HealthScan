@@ -19,3 +19,37 @@ curl -X POST \
      }' \
      http://localhost:5000/add_file
 
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "newuser@example.com",
+       "password": "securepassword123"
+     }' \
+     http://localhost:5000/auth/login
+
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "newuser1@example.com",
+       "password": "securepassword123",
+       "sex": "F",
+       "age": 28,
+       "is_admin": false
+     }' \
+     http://localhost:5000/auth/register
+
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "newuser2@example.com",
+       "password": "securepassword123",
+       "sex": "F",
+       "age": 28,
+       "is_admin": false
+     }' \
+     http://localhost:5000/auth/register
+
+curl -X POST \
+     -F "email=newuser@example.com" \
+     -F "files=@test_input_files/txt_file1.txt" \
+     http://localhost:5000/files/save
