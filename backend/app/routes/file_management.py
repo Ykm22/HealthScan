@@ -95,3 +95,48 @@ def get_user_files(email):
         return make_response(jsonify({"error": "User not found"}), 404)
     except Exception as e:
         return make_response(jsonify({"error": "Failed to retrieve files", "details": str(e)}), 500)
+
+@file_management_blueprint.route('/delete', methods=['POST'])
+def delete_files():
+    if not request.is_json:
+        return make_response(jsonify({"error": "Request must be JSON"}), 400)
+    
+    data = request.get_json()
+    
+    if 'file_ids' not in data or not isinstance(data['file_ids'], list):
+        return make_response(jsonify({"error": "Missing or invalid file_ids"}), 400)
+    
+    file_ids = data['file_ids']
+    
+    deleted_files = []
+    not_found_files = []
+    
+    try:
+        for file_id in file_ids:
+            file = File.query.get(file_id)
+            if file:
+                # Delete the file from the filesystem
+                if os.path.exists(file.path):
+                    os.remove(file.path)
+                
+                # Delete the file record from the database
+                db.session.delete(file)
+                deleted_files.append(file_id)
+            else:
+                not_found_files.append(file_id)
+        
+        db.session.commit()
+        
+        response_data = {
+            "message": "File deletion process completed",
+            "files_deleted": deleted_files,
+        }
+        
+        if not_found_files:
+            response_data["files_not_found"] = not_found_files
+        
+        return jsonify(response_data), 200
+    
+    except Exception as e:
+        db.session.rollback()
+        return make_response(jsonify({"error": "Failed to delete files", "details": str(e)}), 500)
