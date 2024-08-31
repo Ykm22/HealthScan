@@ -9,7 +9,7 @@ swagger = Swagger()
 bcrypt = Bcrypt()
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder="../templates/")
     app.config.from_object(Config)
 
     db.init_app(app)
@@ -19,9 +19,13 @@ def create_app():
     from app.routes.main import  main_blueprint
     from app.routes.authentication import authorization_blueprint
     from app.routes.file_management import file_management_blueprint
+    from app.routes.password_reset import password_reset_blueprint
+    from app.routes.user_settings import user_settings_blueprint
 
     app.register_blueprint(main_blueprint)
     app.register_blueprint(authorization_blueprint)
     app.register_blueprint(file_management_blueprint)
+    app.register_blueprint(password_reset_blueprint)
+    app.register_blueprint(user_settings_blueprint)
 
     return app
