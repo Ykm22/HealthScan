@@ -3,6 +3,8 @@ from app.models.user import User
 from app.models.file import File
 from app import db, bcrypt
 from sqlalchemy.exc import NoResultFound, IntegrityError
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+
 
 authorization_blueprint = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -20,12 +22,14 @@ def login():
         user = User.query.filter_by(email=email).one()
         if bcrypt.check_password_hash(user.password, password):
             # Passwords match
+            access_token = create_access_token(identity = user.id)
             return jsonify({
                 "id": user.id,
                 "email": user.email,
                 "sex": user.sex,
                 "age": user.age,
-                "is_admin": user.is_admin
+                "is_admin": user.is_admin,
+                "access_token": access_token
             }), 200
         else:
             # Passwords don't match
@@ -57,13 +61,16 @@ def register():
         # id is only assigned after commit(). before, it is None
         db.session.commit()
         # print(new_user.id)
+
+        access_token = create_access_token(identity = new_user.id)
         
         return jsonify({
             "id": new_user.id,
             "email": new_user.email,
             "sex": new_user.sex,
             "age": new_user.age,
-            "is_admin": new_user.is_admin
+            "is_admin": new_user.is_admin,
+            "access_token": access_token
         }), 201
     
     except IntegrityError:
