@@ -1,0 +1,91 @@
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "newuser@example.com",
+       "password": "securepassword123",
+       "sex": "F",
+       "age": 28,
+       "is_admin": false
+     }' \
+     http://localhost:5000/add_user
+
+curl -X GET http://localhost:5000/get_user/newuser@example.com
+
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "newuser@example.com",
+       "file_path": "/path/to/file.txt"
+     }' \
+     http://localhost:5000/add_file
+
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "newuser@example.com",
+       "password": "securepassword123"
+     }' \
+     http://localhost:5000/auth/login
+
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "newuser1@example.com",
+       "password": "securepassword123",
+       "sex": "F",
+       "age": 28,
+       "is_admin": false
+     }' \
+     http://localhost:5000/auth/register
+
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "newuser2@example.com",
+       "password": "securepassword123",
+       "sex": "F",
+       "age": 28,
+       "is_admin": false
+     }' \
+     http://localhost:5000/auth/register
+
+curl -X POST \
+     -F "email=newuser@example.com" \
+     -F "files=@test_input_files/txt_file1.txt" \
+     http://localhost:5000/files/save
+
+curl -X GET http://localhost:5000/files/get/newuser@example.com
+
+curl -X POST http://localhost:5000/files/delete \
+     -H "Content-Type: application/json" \
+     -d '{
+       "file_ids": [
+         "f1ae43d1-c6fd-42bd-b272-0f2000bc1c50",
+         "2aa2c1fe-659e-4111-8deb-46f208c5b8fe",
+         "e72cee0a-7383-4aae-9013-721a18fec204",
+         "04e13d0e-6592-4eb8-94a6-09b93399a412",
+         "4ef956a5-cb1e-4845-8408-290f729ce91d",
+         "e5dc31db-2e2a-4c75-95c5-52170ef6b92f",
+         "7d288283-77fa-4126-8d88-bc28fb29cb25",
+         "bfb45135-f2c6-4d5e-8ef6-b0696d517aaf",
+         "65766648-f797-4e77-99f9-46408e992c1f",
+         "f7fc6201-f113-4201-acc5-52b44f2f173a",
+         "c43f1cc9-6f2f-4387-9899-e60ba14a2c94"
+       ]
+     }'
+
+curl -X POST http://localhost:5000/password/forgot \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "stefanichim2201@gmail.com"
+     }'
+
+curl -X PUT http://localhost:5000/users/1da806db-d148-42a2-bfe8-af9d1957a9c0 \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "stefanichim2201@example.com",
+       "password": "newpassword123",
+       "sex": "M",
+       "age": 30,
+       "is_admin": false
+     }'

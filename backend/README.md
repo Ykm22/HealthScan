@@ -31,5 +31,5 @@ pip install -r requirements.txt
 ## Start server
 - While virtual environment is activated
 ```
-python app.py
+python run.py
 ```
