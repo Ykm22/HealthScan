@@ -67,6 +67,25 @@ curl -X POST http://localhost:5000/files/delete \
          "4ef956a5-cb1e-4845-8408-290f729ce91d",
          "e5dc31db-2e2a-4c75-95c5-52170ef6b92f",
          "7d288283-77fa-4126-8d88-bc28fb29cb25",
-         "bfb45135-f2c6-4d5e-8ef6-b0696d517aaf"
+         "bfb45135-f2c6-4d5e-8ef6-b0696d517aaf",
+         "65766648-f797-4e77-99f9-46408e992c1f",
+         "f7fc6201-f113-4201-acc5-52b44f2f173a",
+         "c43f1cc9-6f2f-4387-9899-e60ba14a2c94"
        ]
+     }'
+
+curl -X POST http://localhost:5000/password/forgot \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "stefanichim2201@gmail.com"
+     }'
+
+curl -X PUT http://localhost:5000/users/1da806db-d148-42a2-bfe8-af9d1957a9c0 \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "stefanichim2201@example.com",
+       "password": "newpassword123",
+       "sex": "M",
+       "age": 30,
+       "is_admin": false
      }'
