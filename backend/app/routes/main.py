@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from app.models.user import User
 from app.models.file import File
 from app import db, bcrypt
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 main_blueprint = Blueprint('main', __name__)
 

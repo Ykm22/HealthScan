@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify
 from app import db, bcrypt
 from app.models import User
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 user_settings_blueprint = Blueprint('user', __name__, url_prefix='/users')
 
 @user_settings_blueprint.route('/<string:user_id>', methods=['PUT'])
+@jwt_required
 def update_user(user_id):
     user = User.query.get_or_404(user_id)
     data = request.json
