@@ -5,6 +5,7 @@ from flasgger import Swagger
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from app.middlewares import jwt_required_for_routes
+from flask_cors import CORS
 
 db = SQLAlchemy()
 swagger = Swagger()
@@ -15,6 +16,7 @@ def create_app():
     app = Flask(__name__, template_folder="../templates/")
     app.config.from_object(Config)
 
+    CORS(app)
     db.init_app(app)
     swagger.init_app(app)
     bcrypt.init_app(app)
@@ -32,10 +34,10 @@ def create_app():
     app.register_blueprint(password_reset_blueprint)
     app.register_blueprint(user_settings_blueprint)
 
-    @app.before_request
-    @jwt_required_for_routes
-    def before_request():
-        # This will run before each request
-        pass
+    # @app.before_request
+    # @jwt_required_for_routes
+    # def before_request():
+    #     # This will run before each request
+    #     pass
 
     return app

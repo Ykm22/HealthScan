@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response, current_app, url_for, render_template
+from flask import Blueprint, request, jsonify, make_response, current_app, url_for, render_template, redirect
 from sqlalchemy.exc import NoResultFound
 from app import db
 from app.models.user import User
@@ -67,7 +67,8 @@ def reset_password(token):
 
     if request.method == 'GET':
         # Render a form for the user to enter a new password
-        return render_template('reset_password.html', token=token)
+        return redirect(f"http://localhost:3000/reset-password/{token}")
+        # return render_template('reset_password.html', token=token)
 
     elif request.method == 'POST':
         if not request.is_json:
