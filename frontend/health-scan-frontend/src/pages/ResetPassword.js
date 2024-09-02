@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -6,13 +7,10 @@ import {
   Typography,
   Paper,
   Container,
-  Link,
+  Snackbar,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
-import { login } from '../api/auth';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { resetPassword } from '../api/auth'; // Import the API function
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   marginTop: theme.spacing(8),
@@ -30,109 +28,116 @@ const StyledForm = styled('form')(({ theme }) => ({
 
 const SubmitButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(3, 0, 2),
+  backgroundColor: '#007BFF',
+  color: '#FFFFFF',
+  '&:hover': {
+    backgroundColor: '#0056b3',
+  },
 }));
 
-const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+const ResetPasswordPage = () => {
+  const [newPassword, setNewPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { token } = useParams();
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError('');
+    if (!newPassword) {
+      setPasswordError('Password is required');
+      return;
+    }
+    setPasswordError('');
+    setIsLoading(true);
 
     try {
-      const data = await login(email, password);
-      console.log('Login successful:', data);
-
-      // Show success toast
-      toast.success('Login successful!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        style: { backgroundColor: '#4CAF50', color: 'white' }
-      });
-
-      // Navigate to the home page after a short delay
-      setTimeout(() => navigate('/Home'), 1000);
+      const data = await resetPassword(token, newPassword);
+      setSnackbarMessage(data.message);
+      setOpenSnackbar(true);
+      setTimeout(() => navigate('/login'), 3000); // Redirect to login page after 3 seconds
     } catch (error) {
-      console.error('Login error:', error);
-      setError('Invalid email or password. Please try again.');
+      console.error('Error resetting password:', error);
+      setSnackbarMessage(error.error || 'Failed to reset password');
+      setOpenSnackbar(true);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
   };
 
   return (
     <Container component="main" maxWidth="xs">
-      <ToastContainer />
       <StyledPaper elevation={3}>
-        <Typography component="h1" variant="h5" color="primary">
-          Login
+        <Typography component="h1" variant="h5" color="#495057">
+          Reset Your Password
         </Typography>
         <StyledForm onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
-            required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
+            name="newPassword"
+            label="New Password"
             type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            id="newPassword"
+            autoComplete="new-password"
+            value={newPassword}
+            onChange={(e) => {
+              setNewPassword(e.target.value);
+              setPasswordError('');
+            }}
+            error={!!passwordError}
+            helperText={passwordError}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#E9F7FE',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#007BFF',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#007BFF',
+                },
+              },
+              '& .MuiInputLabel-root': {
+                color: '#6C757D',
+              },
+            }}
           />
-          {error && (
-            <Typography color="error" align="center">
-              {error}
-            </Typography>
-          )}
           <SubmitButton
             type="submit"
             fullWidth
             variant="contained"
-            color="primary"
+            disabled={isLoading}
           >
-            Sign In
+            {isLoading ? 'Resetting...' : 'Reset Password'}
           </SubmitButton>
-          <Box mt={2} display="flex" justifyContent="space-between">
-            <Link 
-              href="#" 
-              variant="body2" 
-              color="textSecondary"
-              onClick={(e) => {
-                e.preventDefault();
-                navigate('/forgot-password');
-              }}
-            >
-              Forgot password?
-            </Link>
-            <Link href="#" variant="body2" color="textSecondary">
-              Don't have an account? Sign Up
-            </Link>
-          </Box>
         </StyledForm>
       </StyledPaper>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+        ContentProps={{
+          sx: {
+            backgroundColor: snackbarMessage.includes('successfully') ? '#28A745' : '#FFC107',
+            color: '#FFFFFF',
+          }
+        }}
+      />
     </Container>
   );
 };
 
-export default LoginPage;
+export default ResetPasswordPage;
