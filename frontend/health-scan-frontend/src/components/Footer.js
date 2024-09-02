@@ -7,7 +7,6 @@ const StyledFooter = styled(Box)(({ theme }) => ({
   color: '#495057',
   padding: theme.spacing(3),
   marginTop: 'auto',
-  position: 'sticky',
   bottom: 0,
   width: '100%',
 }));

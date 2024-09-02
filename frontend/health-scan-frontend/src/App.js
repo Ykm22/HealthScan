@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home/Home';
+import AboutUs from './pages/About us/AboutUs';
 
 // Create a theme
 const theme = createTheme({
@@ -27,7 +28,6 @@ const theme = createTheme({
       secondary: '#6C757D', // Medium Gray
     },
   },
-  // You can add more theme customizations here
 });
 
 function App() {
@@ -40,6 +40,7 @@ function App() {
           <Box component="main" sx={{ flexGrow: 1, backgroundColor: '#E9F7FE', padding: '20px' }}>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/about" element={<AboutUs />} />
             </Routes>
           </Box>
           <Footer />

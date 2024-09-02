@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: '#007BFF',
+  width: '100%',
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
