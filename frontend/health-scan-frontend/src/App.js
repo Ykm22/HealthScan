@@ -1,34 +1,14 @@
 import React from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import theme from './themes/theme'
 
 // Import your components
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home/Home';
-
-// Create a theme
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#007BFF', // Soft Blue
-    },
-    secondary: {
-      main: '#28A745', // Light Green
-    },
-    background: {
-      default: '#FFFFFF', // White
-      paper: '#F1F3F5', // Very Light Gray
-    },
-    text: {
-      primary: '#495057', // Dark Gray
-      secondary: '#6C757D', // Medium Gray
-    },
-  },
-  // You can add more theme customizations here
-});
 
 function App() {
   return (
