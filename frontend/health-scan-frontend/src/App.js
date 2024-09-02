@@ -9,6 +9,10 @@ import theme from './themes/theme'
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   return (
@@ -20,6 +24,10 @@ function App() {
           <Box component="main" sx={{ flexGrow: 1, backgroundColor: '#E9F7FE', padding: '20px' }}>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
             </Routes>
           </Box>
           <Footer />
