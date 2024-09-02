@@ -40,7 +40,7 @@ function App() {
           <Box component="main" sx={{ flexGrow: 1, backgroundColor: '#E9F7FE', padding: '20px' }}>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/about" element={<AboutUs />} />
             </Routes>
           </Box>
           <Footer />
