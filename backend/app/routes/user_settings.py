@@ -34,3 +34,22 @@ def update_user(user_id):
             'is_admin': user.is_admin
         }
     }), 200
+
+@user_settings_blueprint.route('/<string:user_id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(user_id):
+    # Get the identity of the current user
+    current_user_id = get_jwt_identity()
+    
+    # Fetch the user to be deleted
+    user_to_delete = User.query.get_or_404(user_id)
+    
+    # Check if the current user is trying to delete themselves or if they're an admin
+    current_user = User.query.get(current_user_id)
+    if current_user_id != user_id and not current_user.is_admin:
+        return jsonify({'message': 'You do not have permission to delete this user'}), 403
+    
+    db.session.delete(user_to_delete)
+    db.session.commit()
+    
+    return jsonify({'message': 'User deleted successfully'}), 200

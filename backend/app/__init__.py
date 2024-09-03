@@ -4,7 +4,7 @@ from config import Config
 from flasgger import Swagger
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
-from app.middlewares import jwt_required_for_routes
+from app.middlewares import jwt_required_for_routes, jwt_required_except
 from flask_cors import CORS
 
 db = SQLAlchemy()
@@ -34,10 +34,13 @@ def create_app():
     app.register_blueprint(password_reset_blueprint)
     app.register_blueprint(user_settings_blueprint)
 
-    # @app.before_request
-    # @jwt_required_for_routes
-    # def before_request():
-    #     # This will run before each request
-    #     pass
+    # List of blueprints to exclude from JWT check
+    excluded_blueprints = ['authorization', 'password_reset', 'main']
+
+    @app.before_request
+    @jwt_required_except(excluded_blueprints)
+    def before_request():
+        # This will run before each request, except for excluded blueprints
+        pass
 
     return app

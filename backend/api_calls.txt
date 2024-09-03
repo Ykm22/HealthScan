@@ -9,6 +9,8 @@ curl -X POST \
      }' \
      http://localhost:5000/add_user
 
+curl -X GET http://localhost:5000/get_user/stefanichim2201.com 
+
 curl -X GET http://localhost:5000/get_user/newuser1@example.com \
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyNTIxMjU5MCwianRpIjoiNjlkZmZiNGEtY2ZlMy00MTA1LTg3NmItZWY5NjQwYWIzOGY4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjU1ODIzOTliLTUzODgtNGExMy04OWE1LTQ1YmExYWNlMTVkYSIsIm5iZiI6MTcyNTIxMjU5MCwiY3NyZiI6ImFmNTQ5ZTUxLTUzZjctNDI3NC1hMDRkLTNmNGMzZDA0YTQ2MiIsImV4cCI6MTcyNTIxMzQ5MH0.nFQXi2qYbdQ7xnYTsyIlbkzwHAlfmMF9d2zaC7YdG5I"
 

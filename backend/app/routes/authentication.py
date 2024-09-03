@@ -6,7 +6,7 @@ from sqlalchemy.exc import NoResultFound, IntegrityError
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 
-authorization_blueprint = Blueprint('auth', __name__, url_prefix='/auth')
+authorization_blueprint = Blueprint('authorization', __name__, url_prefix='/auth')
 
 @authorization_blueprint.route('/login', methods=['POST'])
 def login():
