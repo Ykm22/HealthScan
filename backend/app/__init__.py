@@ -6,11 +6,14 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from app.middlewares import jwt_required_for_routes, jwt_required_except
 from flask_cors import CORS
+from models.preparation import get_ad_model
 
 db = SQLAlchemy()
 swagger = Swagger()
 bcrypt = Bcrypt()
 jwt = JWTManager()
+
+AD_model = get_ad_model()
 
 def create_app():
     app = Flask(__name__, template_folder="../templates/")
@@ -27,12 +30,14 @@ def create_app():
     from app.routes.file_management import file_management_blueprint
     from app.routes.password_reset import password_reset_blueprint
     from app.routes.user_settings import user_settings_blueprint
+    from app.routes.predictions import predictions_blueprint
 
     app.register_blueprint(main_blueprint)
     app.register_blueprint(authorization_blueprint)
     app.register_blueprint(file_management_blueprint)
     app.register_blueprint(password_reset_blueprint)
     app.register_blueprint(user_settings_blueprint)
+    app.register_blueprint(predictions_blueprint)
 
     # List of blueprints to exclude from JWT check
     excluded_blueprints = ['authorization', 'password_reset', 'main']

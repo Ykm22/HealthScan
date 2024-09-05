@@ -25,8 +25,8 @@ curl -X POST \
 curl -X POST \
      -H "Content-Type: application/json" \
      -d '{
-       "email": "newuser@example.com",
-       "password": "securepassword123"
+       "email": "stefanichim2201@gmail.com",
+       "password": "new_password3"
      }' \
      http://localhost:5000/auth/login
 
@@ -100,3 +100,13 @@ curl -X PUT http://localhost:5000/users/1da806db-d148-42a2-bfe8-af9d1957a9c0 \
        "age": 30,
        "is_admin": false
      }'
+
+curl -X POST http://localhost:5000/predict_ad \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyNTUyOTA5MSwianRpIjoiODQ1ZjEwZmMtZGUzZC00NDY1LThlMjYtOTk0NGRmZWZiYWNhIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjUwMTg2ZGFiLWQ4ZTQtNDk3ZC1hM2NiLTNlOGEyMTk3NmE0YSIsIm5iZiI6MTcyNTUyOTA5MSwiY3NyZiI6IjQ5N2U4OGI4LWJjZjYtNDY5Zi1iNWQyLTA2OGUxOGU3YmM5ZCIsImV4cCI6MTcyNTUyOTk5MX0.VBqZiwBOAVhj3jIhKteQo84BAD4cELoMexqI_I0zeLY" \
+     -d '{
+       "input_files_ids": ["123e4567-e89b-12d3-a456-426614174000"],
+       "age": 30,
+       "sex": "M"
+     }'
+
