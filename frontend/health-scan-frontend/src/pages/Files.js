@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, List, ListItem, ListItemText, CircularProgress, Button, Checkbox } from '@mui/material';
-import axios from 'axios';
-import { getFiles } from '../api/files.js';
+import { getFiles, deleteFiles, uploadFiles } from '../api/files.js';
+import { predictAlzheimers } from '../api/ad_prediction.js';
 
 const Files = () => {
   const [files, setFiles] = useState([]);
@@ -11,6 +11,7 @@ const Files = () => {
   const [selectedFiles, setSelectedFiles] = useState({});
   const [deleting, setDeleting] = useState(false);
   const [predicting, setPredicting] = useState(false);
+  const [predictions, setPredictions] = useState({});
 
   useEffect(() => {
     fetchFiles();
@@ -18,7 +19,9 @@ const Files = () => {
 
   const fetchFiles = async () => {
     try {
-      const email = 'stefanichim2201@gmail.com';
+      const userProperties = JSON.parse(localStorage.getItem('user_properties') || '{}');
+      const email = userProperties.email;
+
       const data = await getFiles(email);
       setFiles(data);
       setLoading(false);
@@ -31,13 +34,7 @@ const Files = () => {
     setDeleting(true);
     const filesToDelete = files.filter((file, index) => selectedFiles[index]).map(file => file.id);
     try {
-      const userProperties = JSON.parse(localStorage.getItem('user_properties') || '{}');
-      const accessToken = userProperties.access_token;
-      await axios.post('http://localhost:5000/files/delete', { file_ids: filesToDelete }, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        },
-      });
+      await deleteFiles(filesToDelete);
       fetchFiles(); // Refresh the file list after deletion
       setSelectedFiles({}); // Clear selection
     } catch (err) {
@@ -54,24 +51,19 @@ const Files = () => {
     if (selectedFiles.length === 0) return;
 
     setUploading(true);
+
     const formData = new FormData();
-    formData.append('email', 'stefanichim2201@gmail.com');
+    const userProperties = JSON.parse(localStorage.getItem('user_properties') || '{}');
+    const email = userProperties.email;
+
+    formData.append('email', email);
 
     for (let i = 0; i < selectedFiles.length; i++) {
       formData.append('files', selectedFiles[i]);
     }
 
     try {
-    const userProperties = JSON.parse(localStorage.getItem('user_properties') || '{}');
-    const accessToken = userProperties.access_token;
-
-
-      await axios.post('http://localhost:5000/files/save', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${accessToken}`
-        },
-      });
+      await uploadFiles(formData);
       fetchFiles(); // Refresh the file list after upload
       setUploading(false);
     } catch (err) {
@@ -86,30 +78,16 @@ const Files = () => {
     const selectedFileNames = files.filter((file, index) => selectedFiles[index]).map(file => file.filename);
     try {
       const userProperties = JSON.parse(localStorage.getItem('user_properties') || '{}');
-      const accessToken = userProperties.access_token;
-      const { age, sex } = userProperties;
-      console.log(age);
-      console.log(sex);
-      const response = await axios.post('http://localhost:5000/predict_ad', 
-        {
-          input_files_ids: selectedFileIds,
-          input_files_names: selectedFileNames,
-          age: parseInt(age),
-          sex: sex
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
-          },
-        }
-      );
+      const { access_token: accessToken, age, sex } = userProperties;
+      const response = await predictAlzheimers(selectedFileIds, selectedFileNames, age, sex, accessToken);
       
-      // Log the response
-      console.log('Alzheimer Prediction Response:', response.data);
-      
+      const newPredictions = {};
+      response.forEach(item => {
+        newPredictions[item.file_id] = item.prediction;
+      });
+      setPredictions(newPredictions);
     } catch (err) {
-      setError('Error predicting Alzheimer\'s: ' + err.message);
+      setError(err.message);
     } finally {
       setPredicting(false);
     }
@@ -177,11 +155,24 @@ const Files = () => {
               />
             }
           >
-            <ListItemText primary={file.filename.slice(0, 20)} secondary={file.size} />
+            <ListItemText 
+              primary={file.filename.slice(0, 20)} 
+              secondary={
+                <>
+                  <Typography component="span" variant="body2" color="text.primary">
+                    {file.size}
+                  </Typography>
+                  {predictions[file.id] && (
+                    <Typography component="p" variant="body2" color="text.secondary">
+                      Prediction: {predictions[file.id]}
+                    </Typography>
+                  )}
+                </>
+              }
+            />
           </ListItem>
         ))}
-      </List>
-    </Box>
+      </List>    </Box>
   );
 };
 

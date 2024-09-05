@@ -17,3 +17,5 @@ class Config:
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'True').lower() == 'true'
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    AD_MODEL_8SLICES_WEIGHTS_PATH = os.environ.get('AD_MODEL_8SLICES_WEIGHTS_PATH')
+    AD_MODEL_1SLICES_WEIGHTS_PATH = os.environ.get('AD_MODEL_1SLICES_WEIGHTS_PATH')

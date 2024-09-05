@@ -18,7 +18,7 @@ def find_file_paths(user_id, input_files_ids, input_files_names):
         file_path = f'{os.getcwd()}/{users_storage}/{user_id}/{input_file_name}'
         file_paths.append(os.path.abspath(file_path))
 
-    return file_paths
+    return file_paths, input_files_ids
 
 input_shapes = {
     (256, 256, 166) : 128,
@@ -54,10 +54,14 @@ def predict_ad():
     sex = data.get('sex')
     sex = 0 if sex == "M" else 1
 
-    files = find_file_paths(user_id, input_files_ids, input_files_names)
+    files, files_ids = find_file_paths(user_id, input_files_ids, input_files_names)
 
-    predictions = []
-    for file in files:
-        predictions.append(inference_AD(file, age, sex))
+    results = []
+    for file, file_id in zip(files, files_ids):
+        prediction = inference_AD(file, age, sex)
+        results.append({
+            "prediction": prediction,
+            "file_id": file_id
+        })
 
-    return jsonify(predictions), 200
+    return jsonify(results), 200

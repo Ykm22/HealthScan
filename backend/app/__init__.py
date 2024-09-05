@@ -14,7 +14,7 @@ swagger = Swagger()
 bcrypt = Bcrypt()
 jwt = JWTManager()
 
-AD_model = get_ad_model()
+AD_model = get_ad_model(Config.AD_MODEL_8SLICES_WEIGHTS_PATH)
 
 def create_app():
     app = Flask(__name__, template_folder="../templates/")

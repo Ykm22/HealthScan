@@ -18,3 +18,33 @@ export const getFiles = async (email) => {
   }
 };
 
+export const deleteFiles = async (fileIds) => {
+  try {
+    const userProperties = JSON.parse(localStorage.getItem('user_properties') || '{}');
+    const accessToken = userProperties.access_token;
+
+    await axios.post(`${API_URL}/files/delete`, { file_ids: fileIds }, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      },
+    });
+  } catch (error) {
+    throw new Error('Error deleting files: ' + error.message);
+  }
+};
+
+export const uploadFiles = async (formData) => {
+  try {
+    const userProperties = JSON.parse(localStorage.getItem('user_properties') || '{}');
+    const accessToken = userProperties.access_token;
+
+    await axios.post(`${API_URL}/files/save`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${accessToken}`
+      },
+    });
+  } catch (error) {
+    throw new Error('Error uploading files: ' + error.message);
+  }
+};
