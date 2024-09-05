@@ -6,3 +6,4 @@ flask_bcrypt==1.0.1
 flask_jwt_extended==4.6.0
 flask_cors==5.0.0
 python-dotenv==1.0.1
+Flask-Migrate==4.0.7

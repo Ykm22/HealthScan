@@ -6,12 +6,16 @@ import os
 from models.input_processing import input_process, read_image
 import torch
 
-def find_file_paths(user_id, input_files_ids):
+def find_file_paths(user_id, input_files_ids, input_files_names):
     file_paths = []
     users_storage = Config.UPLOAD_FOLDER
 
-    for input_file_id in input_files_ids:
-        file_path = f'{os.getcwd()}/{users_storage}/{user_id}/{input_file_id}.nii'
+    # for input_file_id in input_files_ids:
+    #     file_path = f'{os.getcwd()}/{users_storage}/{user_id}/{input_file_id}.nii'
+    #     file_paths.append(os.path.abspath(file_path))
+
+    for input_file_name in input_files_names:
+        file_path = f'{os.getcwd()}/{users_storage}/{user_id}/{input_file_name}'
         file_paths.append(os.path.abspath(file_path))
 
     return file_paths
@@ -43,13 +47,14 @@ def predict_ad():
     data = request.json
 
     user_id = get_jwt_identity()
-    user_id = '1da806db-d148-42a2-bfe8-af9d1957a9c0'
+    # user_id = '1da806db-d148-42a2-bfe8-af9d1957a9c0'
     input_files_ids = data.get('input_files_ids', [])
+    input_files_names = data.get('input_files_names', [])
     age = data.get('age')
     sex = data.get('sex')
     sex = 0 if sex == "M" else 1
 
-    files = find_file_paths(user_id, input_files_ids)
+    files = find_file_paths(user_id, input_files_ids, input_files_names)
 
     predictions = []
     for file in files:

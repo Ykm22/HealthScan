@@ -52,7 +52,7 @@ def save_files():
 
                 file.save(file_path)
                 
-                new_file = File(user_id=user.id, path=file_path)
+                new_file = File(user_id=user.id, path=file_path, filename=filename)
 
                 db.session.add(new_file)
                 db.session.commit()
@@ -85,8 +85,11 @@ def get_user_files(email):
     try:
         user = User.query.filter_by(email=email).one()
         files = user.files.all()
+        print("hi")
+        print(f"files = {files}")
         return jsonify([
             {
+                "filename": file.filename,
                 "id": file.id,
                 "path": file.path
             } for file in files

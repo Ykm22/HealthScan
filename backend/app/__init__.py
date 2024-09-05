@@ -7,6 +7,7 @@ from flask_jwt_extended import JWTManager
 from app.middlewares import jwt_required_for_routes, jwt_required_except
 from flask_cors import CORS
 from models.preparation import get_ad_model
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
 swagger = Swagger()
@@ -21,6 +22,7 @@ def create_app():
 
     CORS(app)
     db.init_app(app)
+    migrate = Migrate(app, db)
     swagger.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
